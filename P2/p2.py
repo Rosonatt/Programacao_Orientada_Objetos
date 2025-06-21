@@ -1,15 +1,33 @@
 class Objeto:
     def __init__(self, nome, tipo, descricao):
-        self._nome, self._tipo, self._descricao = nome, tipo, descricao
-    def apresentacao(self): return f"{self._nome} ({self._tipo}): {self._descricao}"
+        self._nome = nome
+        self._tipo = tipo
+        self._descricao = descricao
+    
+    def apresentacao(self):
+        return f"{self._nome} ({self._tipo}): {self._descricao}"
+
 
 class Personagem:
     def __init__(self, nome, tipo):
-        self._nome, self._tipo, self._vida, self._objeto = nome, tipo, 100, None
-        self._descricoes = {'mago':" Usa grande magias ancestrais",'elfo':"Possui uma afindade maior com a natureza",'anão':"Baixo orém  Robusto ",'bardo':"GuitarHero",'arqueiro':"Possui uma  otmia visão e prescisão"}
+        self._nome = nome
+        self._tipo = tipo
+        self._vida = 100
+        self._objeto = None
+        self._descricoes = {
+            'mago': "Usa grande magias ancestrais",
+            'elfo': "Possui uma afindade maior com a natureza",
+            'anão': "Baixo orém Robusto",
+            'bardo': "GuitarHero",
+            'arqueiro': "Possui uma otmia visão e prescisão"
+        }
+    
     def apresentacao(self):
-        return f"{self._nome} - {self._tipo.upper()}\n{self._descricoes.get(self._tipo,'Aventureiro')}\nArma: {self._objeto._nome if self._objeto else 'Nenhuma'}"
-    def pegar(self, obj): 
+        return (f"{self._nome} - {self._tipo.upper()}\n"
+                f"{self._descricoes.get(self._tipo, 'Aventureiro')}\n"
+                f"Arma: {self._objeto._nome if self._objeto else 'Nenhuma'}")
+    
+    def pegar(self, obj):
         armas_permitidas = {
             'mago': ['cajado'],
             'elfo': ['arco', 'espada'],
@@ -22,6 +40,7 @@ class Personagem:
             return f"{self._nome} equipou {obj._nome}"
         return f"{self._nome} não pode usar {obj._nome}"
 
+
 class Personagem_NPC(Personagem):
     def __init__(self, nome, tipo):
         super().__init__(nome, tipo)
@@ -30,7 +49,6 @@ class Personagem_NPC(Personagem):
             'furry': {
                 'elfo': "'então você gosta de animais??! hihihi'",
                 'aleatorio': "'olha só o que temos aqui?'"
-                
             },
             'bebe_reborn': {
                 'mago': "'SAI DAQUI VELHOOOOO!'",
@@ -39,44 +57,110 @@ class Personagem_NPC(Personagem):
         }
     
     def conversa(self, personagem):
-        dialogo = self._dialogos.get(self._tipo, {}).get(personagem._tipo, self._dialogos.get(self._tipo, {}).get('aleatorio'))
+        dialogo = self._dialogos.get(self._tipo, {}).get(
+            personagem._tipo, 
+            self._dialogos.get(self._tipo, {}).get('aleatorio')
+        )
         return f"NPC {self._nome} diz: {dialogo}"
 
+
 class Personagem_RPG(Personagem):
-    _afinidades = {'mago':['elfo','anão'],'arqueiro':['mago','elfo','bardo'],'bardo':['mago','arqueiro','anão','elfo'],'elfo':['mago','arqueiro','bardo'],'anão':['mago','bardo']}
+    _afinidades = {
+        'mago': ['elfo', 'anão'],
+        'arqueiro': ['mago', 'elfo', 'bardo'],
+        'bardo': ['mago', 'arqueiro', 'anão', 'elfo'],
+        'elfo': ['mago', 'arqueiro', 'bardo'],
+        'anão': ['mago', 'bardo']
+    }
+    
     _interacaos = {
-        'amigavel': {'mago':{'elfo':"'Sua sabedoria me impressiona'",'anão':"' você é realmente forte'"},
-                    'elfo':{'mago':"'Sua magia é  poderosa'",'arqueiro':"'Sua pontaria é excelente!'"},
-                    'anão':{'mago':"'Sua magia é forte!'",'bardo':"'Sua música é animada!'"}},
-        'hostil': {'mago':{'arqueiro':"'Seus arcos são insignificantes!'",'bardo':"'Silêncio, irritante!'"},
-                  'elfo':{'anão':"'Bêbado barulhento!'",'bardo':"'Música ruim da peste!'"},
-                  'anão':{'elfo':"'humm!! baitola!'",'arqueiro':"'seus arcos são muitos  fraquinhos!'"}},
-        'neutro': "'O que você quer?'"}
-    _armas = {'mago':'cajado','elfo':'arco','anão':'machado','bardo':'alaúde','arqueiro':'arco'}
-    _habilidades = {'mago':"Feitiços",'elfo':"Precisão",'anão':"Força bruta",'bardo':"Encantar",'arqueiro':"Disparos"}
+        'amigavel': {
+            'mago': {
+                'elfo': "'Sua sabedoria me impressiona'",
+                'anão': "'você é realmente forte'"
+            },
+            'elfo': {
+                'mago': "'Sua magia é poderosa'",
+                'arqueiro': "'Sua pontaria é excelente!'"
+            },
+            'anão': {
+                'mago': "'Sua magia é forte!'",
+                'bardo': "'Sua música é animada!'"
+            }
+        },
+        'hostil': {
+            'mago': {
+                'arqueiro': "'Seus arcos são insignificantes!'",
+                'bardo': "'Silêncio, irritante!'"
+            },
+            'elfo': {
+                'anão': "'Bêbado barulhento!'",
+                'bardo': "'Música ruim da peste!'"
+            },
+            'anão': {
+                'elfo': "'humm!! baitola!'",
+                'arqueiro': "'seus arcos são muitos fraquinhos!'"
+            }
+        },
+        'neutro': "'O que você quer?'"
+    }
+    
+    _armas = {
+        'mago': 'cajado',
+        'elfo': 'arco',
+        'anão': 'machado',
+        'bardo': 'alaúde',
+        'arqueiro': 'arco'
+    }
+    
+    _habilidades = {
+        'mago': "Feitiços",
+        'elfo': "Precisão",
+        'anão': "Força bruta",
+        'bardo': "Encantar",
+        'arqueiro': "Disparos"
+    }
 
     def __init__(self, nome, tipo):
-        super().__init__(nome, tipo); self._habilidade = self._habilidades.get(tipo,"Desconhecida")
-    def apresentacao(self): return super().apresentacao()+f"\nHabilidade: {self._habilidade}"
+        super().__init__(nome, tipo)
+        self._habilidade = self._habilidades.get(tipo, "Desconhecida")
+    
+    def apresentacao(self):
+        return super().apresentacao() + f"\nHabilidade: {self._habilidade}"
+    
     def conversa(self, p):
-        if p._tipo in self._afinidades.get(self._tipo,[]):
-            dialogo = self._interacaos['amigavel'].get(self._tipo,{}).get(p._tipo)
-            if dialogo: return f"{self._nome} diz: {dialogo}"
-        if p._tipo in {'elfo':['anão'],'anão':['elfo'],'mago':['bardo']}.get(self._tipo,[]):
-            dialogo = self._interacaos['hostil'].get(self._tipo,{}).get(p._tipo)
-            if dialogo: return f"{self._nome} rosna: {dialogo}"
+        if p._tipo in self._afinidades.get(self._tipo, []):
+            dialogo = self._interacaos['amigavel'].get(self._tipo, {}).get(p._tipo)
+            if dialogo:
+                return f"{self._nome} diz: {dialogo}"
+        
+        if p._tipo in {'elfo': ['anão'], 'anão': ['elfo'], 'mago': ['bardo']}.get(self._tipo, []):
+            dialogo = self._interacaos['hostil'].get(self._tipo, {}).get(p._tipo)
+            if dialogo:
+                return f"{self._nome} rosna: {dialogo}"
+        
         return f"{self._nome} diz: {self._interacaos['neutro']}"
-    def defesa(self, a): self._vida -= a//(3 if self._tipo=='anão' else 2); return f"{self._nome} defendeu! Vida: {self._vida}"
+    
+    def defesa(self, a):
+        self._vida -= a // (3 if self._tipo == 'anão' else 2)
+        return f"{self._nome} defendeu! Vida: {self._vida}"
+    
     def ataque(self, a):
-        d = (25 if self._tipo=='anão' else 20)+(10 if a._tipo in {'elfo':['anão'],'anão':['elfo'],'mago':['bardo']}.get(self._tipo,[]) else 0)
-        d += 10 if (self._objeto and self._objeto._tipo==self._armas[self._tipo]) else 0
-        a._vida -= d; return f"{self._nome} atacou {a._nome} causando {d} de dano!"
+        d = (25 if self._tipo == 'anão' else 20) + \
+            (10 if a._tipo in {'elfo': ['anão'], 'anão': ['elfo'], 'mago': ['bardo']}.get(self._tipo, []) else 0)
+        d += 10 if (self._objeto and self._objeto._tipo == self._armas[self._tipo]) else 0
+        a._vida -= d
+        return f"{self._nome} atacou {a._nome} causando {d} de dano!"
+    
     def trocar_item(self, outro, item):
-        if self._objeto != item: return f"{self._nome} não tem {item._nome}"
-        if item._tipo not in self._armas.get(outro._tipo, []): return f"{outro._nome} não pode usar {item._nome}"
+        if self._objeto != item:
+            return f"{self._nome} não tem {item._nome}"
+        if item._tipo not in self._armas.get(outro._tipo, []):
+            return f"{outro._nome} não pode usar {item._nome}"
         self._objeto = None
         outro.pegar(item)
         return f"{self._nome} deu {item._nome} para {outro._nome}"
+
 
 class Ambiente:
     def __init__(self, nome):
@@ -93,7 +177,8 @@ class Ambiente:
         npcs = [p for p in self._participantes if isinstance(p, Personagem_NPC)]
         for npc in npcs:
             for p in self._participantes:
-                if p != npc: resultados.append(npc.conversa(p))
+                if p != npc:
+                    resultados.append(npc.conversa(p))
         
         arqueiro = next((p for p in self._participantes if p._tipo == 'arqueiro'), None)
         elfo = next((p for p in self._participantes if p._tipo == 'elfo'), None)
@@ -104,27 +189,38 @@ class Ambiente:
         mago = next((p for p in self._participantes if p._tipo == 'mago'), None)
         anao = next((p for p in self._participantes if p._tipo == 'anão'), None)
         if mago and anao and anao._objeto:
-            resultados.append("\nTentativa  não deu certo:")
+            resultados.append("\nTentativa não deu certo:")
             resultados.append(mago.pegar(anao._objeto))
         
         return "\n".join(resultados)
 
-cajado = Objeto("Cajado Arcano de Shetterer","cajado"," da um grande aumento no oder magico")
-arco = Objeto("Arco Élfico de Delternoir","arco","aumenta a pescisão")
-machado = Objeto("Machado de Batalha de Igynoir","machado"," aumenta a perfuração do corte")
-alaude = Objeto("Alaúde Dourado de Roberto Carlos","alaúde"," hipnotiza todos que possam ouvir")
 
-mago = Personagem_RPG("Dumbledore","mago"); mago.pegar(cajado)
-elfo = Personagem_RPG("Adamastor","elfo"); elfo.pegar(arco)
-anao = Personagem_RPG("Ryan Guiwison","anão"); anao.pegar(machado)
-bardo = Personagem_RPG("Astolfo","bardo"); bardo.pegar(alaude)
-arqueiro = Personagem_RPG("KURT","arqueiro"); arqueiro.pegar(arco)
+# Criação dos objetos
+cajado = Objeto("Cajado Arcano de Shetterer", "cajado", "da um grande aumento no oder magico")
+arco = Objeto("Arco Élfico de Delternoir", "arco", "aumenta a pescisão")
+machado = Objeto("Machado de Batalha de Igynoir", "machado", "aumenta a perfuração do corte")
+alaude = Objeto("Alaúde Dourado de Roberto Carlos", "alaúde", "hipnotiza todos que possam ouvir")
 
+# Criação dos personagens
+mago = Personagem_RPG("Dumbledore", "mago")
+mago.pegar(cajado)
+elfo = Personagem_RPG("Adamastor", "elfo")
+elfo.pegar(arco)
+anao = Personagem_RPG("Ryan Guiwison", "anão")
+anao.pegar(machado)
+bardo = Personagem_RPG("Astolfo", "bardo")
+bardo.pegar(alaude)
+arqueiro = Personagem_RPG("KURT", "arqueiro")
+arqueiro.pegar(arco)
+
+# Criação dos NPCs
 furry = Personagem_NPC("Menino Guaxinim Matheus Prates", "furry")
 bebe_reborn = Personagem_NPC("Jv", "bebe_reborn")
 
+# Criação do ambiente
 durmistrong = Ambiente("Cidade de Durmistrong")
 
+# Adicionando personagens ao ambiente
 durmistrong.adicionar(mago)
 durmistrong.adicionar(elfo)
 durmistrong.adicionar(anao)
@@ -133,6 +229,7 @@ durmistrong.adicionar(arqueiro)
 durmistrong.adicionar(furry)
 durmistrong.adicionar(bebe_reborn)
 
+# Exibição
 print("=== CIDADE DE DURMISTRONG ===")
 print("\n=== PERSONAGENS PRESENTES ===")
 for i, p in enumerate(durmistrong._participantes, 1):
